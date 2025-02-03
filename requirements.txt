@@ -1,0 +1,13 @@
+fastapi
+uvicorn[standard]
+langchain_community
+tiktoken
+langchainhub
+langchain
+langgraph
+langchain_huggingface
+langchain_groq
+langchain_milvus
+groq
+pymilvus
+pypdf
