@@ -1,7 +1,7 @@
 from langchain_groq import ChatGroq
 
 llm = ChatGroq(
-    model="llama-3.3-70b-specdec",
+    model="gemma2-9b-it",
     temperature=0,
     max_tokens=None,
     timeout=None,

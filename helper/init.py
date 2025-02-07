@@ -42,7 +42,7 @@ def init_knowledge_base():
 
     embeddings = HuggingFaceEmbeddings(
         model_name=MODEL_EMBEDDING,
-        model_kwargs={"device": "mps", "trust_remote_code": True},
+        model_kwargs={"device": "cpu", "trust_remote_code": True},
         encode_kwargs={'normalize_embeddings': False},
     )
 

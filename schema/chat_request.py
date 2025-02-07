@@ -1,6 +1,7 @@
 from pydantic import BaseModel
 
 class ChatRequest(BaseModel):
-    input_text: str
-    max_tokens: int | None
-    temperature: float | None
+    model_name: str | None = None
+    conservation: list
+    max_tokens: int | None = None
+    temperature: float | None = None
