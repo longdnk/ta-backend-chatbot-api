@@ -1,6 +1,5 @@
-documents
 .env
-
+DB/volumes
 __pycache__
 graph/__pycache__
 help/__pycache__
