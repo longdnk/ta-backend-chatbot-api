@@ -1,8 +1,9 @@
 .env
-DB/volumes
+DB/*
 __pycache__
 graph/__pycache__
 help/__pycache__
 model/__pycache__
 modules/__pycache__
 schema/__pycache__
+DB/volumes

@@ -1,7 +1,8 @@
+import os
 from langchain_milvus import Milvus
 from langchain_huggingface import HuggingFaceEmbeddings
 
-MILVUS_URL = "tcp://127.0.0.1:19530"
+MILVUS_URL = os.getenv("MILVUS_URL")
 MODEL_EMBEDDING = "BAAI/bge-m3"
 
 class MilvusVectorStore:

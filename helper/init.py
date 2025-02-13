@@ -7,7 +7,7 @@ from langchain_huggingface import HuggingFaceEmbeddings
 from langchain_community.document_loaders import PyPDFLoader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 
-MILVUS_URL = "tcp://127.0.0.1:19530"
+MILVUS_URL = os.getenv("MILVUS_URL")
 MODEL_EMBEDDING = "BAAI/bge-m3"
 path_pdfs = "documents/"
 
@@ -19,11 +19,11 @@ def init_knowledge_base():
     docs_processed = []
 
     text_splitter = RecursiveCharacterTextSplitter(
-        chunk_size=300,
+        chunk_size=500,
         chunk_overlap=0,
         add_start_index=True,
         strip_whitespace=True,
-        separators=["\n\n", "\n", ".", " ", ""],
+        separators=["\n\n\n", "\n\n", "\n", ".", " ", ""],
     )
 
     for file in tqdm(os.listdir(path_pdfs)):

@@ -1,0 +1,60 @@
+# name: Build and push Docker image
+
+# on:
+#   push:
+#     branches: ["main"]
+
+# jobs:
+#   BUILD:
+#     runs-on: ubuntu-22.04
+#     steps:
+#      - name: Checkout
+#        uses: actions/checkout@v4
+
+#      - name: Set current date as tag
+#        run: echo "TAG=$(date +'%Y-%m-%d')" >> $GITHUB_ENV
+
+#      - name: Create env file
+#        run: |
+#         touch .env
+#         echo MILVUS_URL=${{ secrets.MILVUS_URL }} >> .env
+#         echo GROQ_ENV_KEY=${{ secrets.GROQ_ENV_KEY }} >> .env
+#         echo HF_TOKEN=${{ secrets.HF_TOKEN }} >> .env
+#         cat .env
+
+#      - name: Build image
+#        run: docker build . -t ${{ secrets.DOCKER_HUB_USERNAME }}/service-backend:${{ env.TAG }}
+
+#      - name: Login Docker Hub
+#        run: docker login -u ${{ secrets.DOCKER_HUB_USERNAME }} --password ${{ secrets.DOCKER_HUB_TOKEN }}
+
+#      - name: Push image to github
+#        run: docker push ${{ secrets.DOCKER_HUB_USERNAME }}/service-backend:${{ env.TAG }}
+
+#      - name: Clear Docker token
+#        run: docker logout
+
+#   DEPLOYMENT:
+#     runs-on: ubuntu-22.04
+#     needs: BUILD 
+#     steps:
+#       - name: Deploy to private server
+#         uses: appleboy/ssh-action@v1.2.0
+#         with:
+#           host: ${{ secrets.SERVER_HOST }}
+#           username: ${{ secrets.SERVER_USER }}
+#           password: ${{ secrets.SERVER_PASSWORD }}
+#           timeout: 2800s
+#           command_timeout: 2800s 
+#           port: 22
+#           script: |
+#             docker logout
+#             pwd
+#             docker login -u ${{ secrets.DOCKER_HUB_USERNAME }} --password ${{ secrets.DOCKER_HUB_TOKEN }}
+#             cd /home/ta-backend-deployment/
+#             ls -al
+#             export TAG=$(date +'%Y-%m-%d')
+#             docker-compose down
+#             docker system prune --all -f
+#             docker-compose up -d --build
+#             docker logout
