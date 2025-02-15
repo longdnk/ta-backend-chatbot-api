@@ -23,7 +23,7 @@ def init_knowledge_base():
         chunk_overlap=0,
         add_start_index=True,
         strip_whitespace=True,
-        separators=["\n\n\n", "\n\n", "\n", ".", " ", ""],
+        separators=["\n\n\n", "\n\n", "\n", ".", " ", "", "•", "  ", "   "],
     )
 
     for file in tqdm(os.listdir(path_pdfs)):

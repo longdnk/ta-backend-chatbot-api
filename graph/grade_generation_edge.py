@@ -1,4 +1,5 @@
 from schema.answer_grader import answer_grader
+from graph.message_state import update_message_state
 from schema.hallucination_grader import hallucination_grader
 
 def grade_generation_v_documents_and_question(state):
@@ -13,7 +14,7 @@ def grade_generation_v_documents_and_question(state):
     """
 
     print("---CHECK HALLUCINATIONS---")
-    print("Check halu: ",state)
+    # print("Check halu: ",state)
     question = state["question"]
     documents = state["documents"]
     generation = state["generation"]
@@ -39,7 +40,7 @@ def grade_generation_v_documents_and_question(state):
     # else:
     #     print("---DECISION: GENERATION IS NOT GROUNDED IN DOCUMENTS, RE-TRY---")
     #     return "not supported"
-    
+
     # Check hallucination
     result = 'useful'
     if grade == "yes":
@@ -57,9 +58,9 @@ def grade_generation_v_documents_and_question(state):
     else:
         print("---DECISION: GENERATION IS NOT GROUNDED IN DOCUMENTS, RE-TRY---")
         result =  "not supported"
-    
+
     # Store the result in the state so it can be accessed later
     state["generation_result_message"] = f"Generation result: {result.replace('_', ' ').title()}"
-    print(state["generation_result_message"])
-
+    update_message_state(result.replace('_', ' ').title())
+    # print(state["generation_result_message"])
     return result
