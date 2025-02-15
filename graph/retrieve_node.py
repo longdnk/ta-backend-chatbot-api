@@ -1,5 +1,6 @@
 from helper.vector import retriever
 
+
 def retrieve(state):
     """
     Retrieve documents

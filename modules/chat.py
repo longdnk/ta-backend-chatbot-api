@@ -42,6 +42,7 @@ async def simple_chat(request: ChatRequest):
 
     return StreamingResponse(event_generator(), media_type="text/plain")
 
+
 @chat_router.post("/rag-chat", status_code=status.HTTP_200_OK, name="Chat with rag")
 async def chat_with_rag(request: ChatRequest):
     inputs = {"question": request.conservation[-1]["content"]}
@@ -52,37 +53,62 @@ async def chat_with_rag(request: ChatRequest):
         async for chunk in app_graph.astream(
             inputs, stream_mode="updates"
         ):  # Assuming astream is async
+            print("chunk1: ", chunk)
             if "retrieve" in chunk:
-                for document in chunk["retrieve"]["documents"]:
+                yield f"""<blockquote style="margin-bottom: 24px;padding: 10px;border: 2px solid;border-color: #4229fb;border-radius: 6px;">
+                        <strong>Retrieve Document: </strong>
+                        """
+                for index, document in enumerate(chunk["retrieve"]["documents"]):
                     content = document.page_content
                     # Yield document content immediately when it's retrieved
-                    yield f"""<details>
-                                <summary>Retrieve Document</summary>
+                    yield f"""<details open style="
+                                    font-weight: 500;
+                                    margin-bottom: 12px;
+                                ">
+                                <summary>Document {index+1}</summary>
                                 <p style="padding-left: 20px;">{content}</p>
-                            </details>
-                            """
+                        </details>"""
                     await asyncio.sleep(0.5)
+                yield f"""</blockquote>"""
 
             if "grade_documents" in chunk:
-                for document in chunk["grade_documents"]["documents"]:
+                yield f"""<blockquote style="margin-bottom: 24px;padding: 10px;border: 2px solid;border-color: #4229fb;border-radius: 6px;">
+                        <strong>Grade Document: </strong>
+                        """
+                for index, document_object in enumerate(chunk["grade_documents"]["documents"]):
+                    document = document_object['document']
+                    grade = document_object['grade']
+                    # Set title and text color based on grade
+                    if grade.lower() == "no":
+                        title = "Irrelevant"
+                        color = "red"
+                    elif grade.lower() == "yes":
+                        title = "Relevant"
+                        color = "green"
+                    else:
+                        title = "Unknown"  # Fallback for other values
+                        color = "gray"  # Default color
                     content = document.page_content
                     # Yield document content immediately when it's retrieved
-                    yield f"""<details>
-                                <summary>Grade Document</summary>
+                    yield f"""<details open style="
+                                    font-weight: 500;
+                                    margin-bottom: 12px;
+                                    color: {color};
+                                ">
+                                <summary>Document {index+1} -- {title}</summary>
                                 <p style="padding-left: 20px;">{content}</p>
-                            </details>
-                            """
+                        </details>"""
                     await asyncio.sleep(0.5)
+                yield f"""</blockquote>"""
 
             if "generate" in chunk:
                 generated_content = chunk["generate"]["generation"]
                 # Yield generated content immediately
                 # yield f"\n**Generated Response**: {content}\n"
-                yield f"""<details>
-                            <summary>Generate Response</summary>
-                            <p style="padding-left: 20px;">{generated_content}</p>
-                        </details>
-                        """
+                yield f"""<blockquote style="margin-bottom: 24px;padding: 10px;border: 2px solid;border-color: #4229fb;border-radius: 6px;">
+                        <strong>Generate Response: </strong>
+                        <p style="padding-left: 20px; font-weight: 500;">{generated_content}</p>
+                    </blockquote>"""
                 await asyncio.sleep(0.5)
 
     # Return the StreamingResponse that will yield the content

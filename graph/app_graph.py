@@ -27,6 +27,15 @@ workflow.add_conditional_edges(
     },
 )
 workflow.add_edge("transform_query", "retrieve")
+# workflow.add_conditional_edges(
+#     "generate",
+#     grade_generation_v_documents_and_question,
+#     {
+#         "not supported": "generate",
+#         "useful": END,
+#         "not useful": "transform_query",
+#     },
+# )
 workflow.add_conditional_edges(
     "generate",
     grade_generation_v_documents_and_question,

@@ -17,14 +17,30 @@ def grade_documents(state):
 
     # Score each doc
     filtered_docs = []
+    # for d in documents:
+    #     score = retrieval_grader.invoke(
+    #         {"question": question, "document": d.page_content}
+    #     )
+    #     grade = score["score"]
+    #     print("grade: ", grade)
+    #     if grade == "yes":
+    #         print("---GRADE: DOCUMENT RELEVANT---")
+    #         filtered_docs.append(d)
+    #     else:
+    #         print("---GRADE: DOCUMENT NOT RELEVANT---")
+    #         continue
+    # return {"documents": filtered_docs, "question": question}
     for d in documents:
         score = retrieval_grader.invoke(
             {"question": question, "document": d.page_content}
         )
         grade = score["score"]
+        
+        filtered_docs.append({"document": d, "grade":grade})
+
         if grade == "yes":
             print("---GRADE: DOCUMENT RELEVANT---")
-            filtered_docs.append(d)
+            # filtered_docs.append({"document": d, "grade":grade})
         else:
             print("---GRADE: DOCUMENT NOT RELEVANT---")
             continue

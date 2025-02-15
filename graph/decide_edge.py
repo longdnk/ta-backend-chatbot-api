@@ -11,6 +11,7 @@ def decide_to_generate(state):
 
     print("---ASSESS GRADED DOCUMENTS---")
     state["question"]
+
     filtered_documents = state["documents"]
 
     if not filtered_documents:

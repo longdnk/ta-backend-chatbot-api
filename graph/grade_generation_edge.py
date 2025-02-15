@@ -13,6 +13,7 @@ def grade_generation_v_documents_and_question(state):
     """
 
     print("---CHECK HALLUCINATIONS---")
+    print("Check halu: ",state)
     question = state["question"]
     documents = state["documents"]
     generation = state["generation"]
@@ -22,7 +23,25 @@ def grade_generation_v_documents_and_question(state):
     )
     grade = score["score"]
 
+    # # Check hallucination
+    # if grade == "yes":
+    #     print("---DECISION: GENERATION IS GROUNDED IN DOCUMENTS---")
+    #     # Check question-answering
+    #     print("---GRADE GENERATION vs QUESTION---")
+    #     score = answer_grader.invoke({"question": question, "generation": generation})
+    #     grade = score["score"]
+    #     if grade == "yes":
+    #         print("---DECISION: GENERATION ADDRESSES QUESTION---")
+    #         return "useful"
+    #     else:
+    #         print("---DECISION: GENERATION DOES NOT ADDRESS QUESTION---")
+    #         return "not useful"
+    # else:
+    #     print("---DECISION: GENERATION IS NOT GROUNDED IN DOCUMENTS, RE-TRY---")
+    #     return "not supported"
+    
     # Check hallucination
+    result = 'useful'
     if grade == "yes":
         print("---DECISION: GENERATION IS GROUNDED IN DOCUMENTS---")
         # Check question-answering
@@ -31,10 +50,16 @@ def grade_generation_v_documents_and_question(state):
         grade = score["score"]
         if grade == "yes":
             print("---DECISION: GENERATION ADDRESSES QUESTION---")
-            return "useful"
+            result =  "useful"
         else:
             print("---DECISION: GENERATION DOES NOT ADDRESS QUESTION---")
-            return "not useful"
+            result =  "not useful"
     else:
         print("---DECISION: GENERATION IS NOT GROUNDED IN DOCUMENTS, RE-TRY---")
-        return "not supported"
+        result =  "not supported"
+    
+    # Store the result in the state so it can be accessed later
+    state["generation_result_message"] = f"Generation result: {result.replace('_', ' ').title()}"
+    print(state["generation_result_message"])
+
+    return result
