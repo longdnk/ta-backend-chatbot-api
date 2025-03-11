@@ -19,8 +19,8 @@ def init_knowledge_base():
     docs_processed = []
 
     text_splitter = RecursiveCharacterTextSplitter(
-        chunk_size=500,
-        chunk_overlap=0,
+        chunk_size=512,
+        chunk_overlap=50,
         add_start_index=True,
         strip_whitespace=True,
         separators=["\n\n\n", "\n\n", "\n", ".", " ", "", "•", "  ", "   "],
@@ -43,7 +43,7 @@ def init_knowledge_base():
     embeddings = HuggingFaceEmbeddings(
         model_name=MODEL_EMBEDDING,
         model_kwargs={"device": "cpu", "trust_remote_code": True},
-        encode_kwargs={'normalize_embeddings': False},
+        encode_kwargs={'normalize_embeddings': True},
     )
 
     vectorstore = Milvus.from_documents(

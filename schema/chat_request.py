@@ -1,8 +1,9 @@
 from pydantic import BaseModel
 
 class ChatRequest(BaseModel):
+    model_id: str | None = None
     model_name: str | None = None
-    conservation: list
+    messages: list
     max_tokens: int | None = None
     temperature: float | None = None
 

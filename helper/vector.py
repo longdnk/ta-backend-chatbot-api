@@ -15,12 +15,12 @@ class MilvusVectorStore:
         embedding = HuggingFaceEmbeddings(
             model_name=MODEL_EMBEDDING,
             model_kwargs={"device": "cpu", "trust_remote_code": True},
-            encode_kwargs={"normalize_embeddings": False},
+            encode_kwargs={"normalize_embeddings": True}
         )
 
         vector_store = Milvus(
             connection_args={"uri": MILVUS_URL},
-            embedding_function=embedding, 
+            embedding_function=embedding,
         )
 
         return vector_store.as_retriever()
